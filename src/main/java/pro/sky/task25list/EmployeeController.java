@@ -1,9 +1,8 @@
 package pro.sky.task25list;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/employee")
@@ -13,15 +12,19 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
     @GetMapping
-    public String welcome() {
-        return "тестовое сообщение";
+    public List<Employee> showAllListEmployee() {
+        return employeeService.getEmployeeList();
     }
     @GetMapping("/add")
-    public Employee addEmployee(@RequestParam String lastName, @RequestParam String firstName) throws EmployeeStorageIsFullException {
+    public Employee addEmployee(@RequestParam String lastName, @RequestParam String firstName) {
         return employeeService.addEmployeeList(lastName, firstName);
     }
     @GetMapping("/remove")
-    public Employee remove(@RequestParam String lastName, @RequestParam String firstName) throws EmployeeNotFoundException {
+    public Employee remove(@RequestParam String lastName, @RequestParam String firstName) {
         return employeeService.deleteEmployeeList(lastName, firstName);
+    }
+    @GetMapping("/find")
+    public Employee find(@RequestParam String lastName, @RequestParam String firstName) {
+        return employeeService.findEmployeeList(lastName, firstName);
     }
 }
