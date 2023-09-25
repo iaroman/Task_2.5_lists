@@ -6,38 +6,38 @@ import java.util.ArrayList;
 import java.util.List;
 @Service
 public class EmployeeService {
-    static private int counter;
+    /*    static private int counter;*/
     private List<Employee> employeeList = new ArrayList<>();
-    private int maxEmployee = 5;
-
-    public Employee addEmployeeList (String lastName, String firstName) throws EmployeeStorageIsFullException{
-        Employee e = new Employee(lastName, firstName);
-        if (counter == maxEmployee) {
+/*    private int maxEmployee = 5;*/
+    public List<Employee> getEmployeeList() {
+        return employeeList;
+    }
+    public Employee addEmployeeList (String lastName, String firstName) {
+        if (employeeList.size() == 5) {
             throw new EmployeeStorageIsFullException("Сотрудников уже много! Мест больше нет!");
         }
-        else {
-            employeeList.add(e);
-            ++counter;
+        String fullName = lastName + firstName;
+        for (Employee employee : employeeList) {
+            if ((employee.getLastName()+employee.getFirstName()).equals(fullName)) {
+                throw new EmployeeAlreadyAddedException("Такой сотрудник уже работает!");
+            }
         }
+        Employee e = new Employee(lastName, firstName);
+        employeeList.add(e);
         return e;
     }
-    public Employee deleteEmployeeList (String lastName, String firstName) throws EmployeeNotFoundException{
-        Employee e = new Employee(lastName, firstName);
-        int i = employeeList.indexOf(new Employee(lastName, firstName));
-        if (i != -1) {
-            employeeList.remove(i);
-            --counter;
-        }
-//        else {
-//            throw new EmployeeNotFoundException("Этот человек у нас не работает");
-//        }
-        return new Employee(lastName, firstName);
+    public Employee deleteEmployeeList (String lastName, String firstName) {
+        Employee e = findEmployeeList(lastName, firstName);
+        employeeList.remove(employeeList.indexOf(e));
+        return e;
     }
-    public void findEmployeeList (String lastName, String firstName) throws EmployeeNotFoundException{
-        if (!employeeList.contains(new Employee(lastName, firstName))) {
-            throw new EmployeeNotFoundException("Этот человек у нас не работает");
+    public Employee findEmployeeList (String lastName, String firstName) {
+        String fullName = lastName + firstName;
+        for (Employee employee : employeeList) {
+            if ((employee.getLastName()+employee.getFirstName()).equals(fullName)) {
+                return employee;
+            }
         }
-        employeeList.indexOf(new Employee(lastName, firstName));
+        throw new EmployeeNotFoundException("Этот сотрудник не найден");
     }
-
 }
